@@ -14,7 +14,7 @@
   },
   "propulsion": {
     "motor_name": "L2200G",
-    "motor_file": "vehicle/openrocket/motors/AeroTech_L2200G"
+    "motor_file": "vehicle/openrocket/motors/AeroTech_L2200G.csv"
   },
   "recovery": {
     "drogue": {

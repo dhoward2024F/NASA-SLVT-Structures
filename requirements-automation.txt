@@ -1,0 +1,2 @@
+# Only OpenRocket automation needs this dependency. The dashboard uses Python's standard library.
+JPype1==1.7.1

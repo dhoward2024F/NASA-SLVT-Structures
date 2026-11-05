@@ -1,6 +1,6 @@
 # SLVT repository configuration
 
-Copy the config/ folder into the repository root.
+These versioned files drive the MATLAB runner and the shared launch-case matrix. See [automation details](../docs/AUTOMATION.md) for the OpenRocket coverage and model selection.
 
 - vehicle.json preserves the previously proposed vehicle fields and values.
 - launch_conditions.json preserves the previous defaults, with wind direction and launch azimuth removed.
@@ -28,7 +28,7 @@ The disabled custom condition uses null inputs to avoid assuming a desired custo
 
 Fill in the existing null vehicle masses, launch-site coordinates/elevation, and rail length before running a model that requires them. Keep the existing motor path consistent with the actual repository file. The three named recovery configurations select the model's existing configurations; their physical definitions remain in the model.
 
-These are configuration data. The Python/MATLAB runners must read these fields, apply the overrides, expand custom_condition when enabled, and export matching result metrics. These files do not themselves execute simulations, change the standalone MATLAB app, or establish that the current app already supports JSON loading.
+The implemented Python/MATLAB runners read these fields, apply overrides, expand the paired custom condition, and export matching metrics. The standalone MATLAB app supports these files through its Repository menu. `matlab_model.json` supplies explicit fallbacks for supported null fields; every fallback appears in the report. `automation.json` selects the OpenRocket model and runtime; the `.ork` retains its own geometry and masses.
 
 ## Requirements evaluation
 

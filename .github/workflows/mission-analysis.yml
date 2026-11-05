@@ -1,0 +1,76 @@
+name: Mission analysis
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['config/**', 'matlab/**', 'vehicle/**', 'openrocket/**', 'scripts/**', 'dashboard/**', 'tests/**', 'requirements-automation.txt', '.github/workflows/mission-analysis.yml']
+  pull_request:
+    paths: ['config/**', 'matlab/**', 'vehicle/**', 'openrocket/**', 'scripts/**', 'dashboard/**', 'tests/**', 'requirements-automation.txt', '.github/workflows/mission-analysis.yml']
+permissions:
+  contents: read
+concurrency:
+  group: mission-analysis-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      HAS_MATLAB_TOKEN: ${{ secrets.MLM_LICENSE_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-automation.txt
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install headless numerical runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --no-install-recommends -y octave
+          python -m pip install -r requirements-automation.txt
+      - uses: actions/cache@v4
+        with:
+          path: .tools/OpenRocket-24.12.jar
+          key: openrocket-24.12-4959b72f52f5
+      - name: Check inputs, reporting, and local access controls
+        run: |
+          python scripts/preflight.py
+          python -m unittest discover -s tests -v
+          node --check dashboard/app.js
+      - name: Test MATLAB-source repository integration in Octave
+        run: octave --no-gui --quiet --eval "addpath('matlab/app'); testSLVTRepository"
+      - name: Set up optional native MATLAB validation
+        if: env.HAS_MATLAB_TOKEN == 'true' && github.event_name != 'pull_request'
+        uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024b
+      - name: Validate native MATLAB tables and exports when licensed
+        if: env.HAS_MATLAB_TOKEN == 'true' && github.event_name != 'pull_request'
+        uses: matlab-actions/run-command@v3
+        env:
+          MLM_LICENSE_TOKEN: ${{ secrets.MLM_LICENSE_TOKEN }}
+        with:
+          command: addpath('matlab/app'); testSLVTFlightApp(false)
+      - name: Run current models
+        id: simulate
+        continue-on-error: true
+        run: python scripts/run_analysis.py --runtime octave
+      - name: Build dashboard data
+        if: always()
+        run: python scripts/build_dashboard_data.py
+      - name: Keep reports and diagnostics in the private repository
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mission-analysis
+          path: results/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Check mission limits and result completeness
+        if: always()
+        run: python scripts/check_requirements.py

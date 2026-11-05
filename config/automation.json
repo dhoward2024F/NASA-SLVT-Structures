@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "repository": "dhoward2024F/NASA-SLVT-Structures",
+  "openrocket": {
+    "model_file": "vehicle/openrocket/SLVT_2627_FS_PDR_LVC1_V2.ork",
+    "simulation_index": 0,
+    "version": "24.12",
+    "jar_sha256": "4959b72f52f5f607941e9722abbb7b7f0c4a38ebbbf84204a329db9f31c4f897",
+    "coverage": "ascent_only",
+    "random_seed": 2027,
+    "turbulence_intensity": 0.0
+  }
+}

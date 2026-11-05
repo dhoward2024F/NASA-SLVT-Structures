@@ -5,7 +5,11 @@ function testSLVTRepository()
     repo=fullfile(scratch,'repo with spaces'); mkdir(repo); mkdir(fullfile(repo,'config'));
     copyfile(fullfile(root,'config','*.json'),fullfile(repo,'config'));
     cfg=slvtDefaultConfig(); cfg.timeStepS=0.005;
-    % Unresolved L1940X must not silently fall back to the bundled L2200G.
+    % A missing motor must not silently fall back to another curve.
+    vehicleFile=fullfile(repo,'config','vehicle.json');
+    vehicle=jsondecode(fileread(vehicleFile));
+    vehicle.propulsion.motor_file='missing-test-motor.csv';
+    slvtWriteJSON(vehicleFile,vehicle);
     mustFail(@() slvtReadRepository(repo),'SLVT:Repository');
     slvtSaveRepositoryModel(cfg,repo);
     plan=slvtReadRepository(repo);

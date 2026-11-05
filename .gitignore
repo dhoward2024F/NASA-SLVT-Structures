@@ -1,0 +1,9 @@
+.DS_Store
+*.asv
+__pycache__/
+*.pyc
+.venv/
+.tools/
+results/
+.openai/
+.preview/

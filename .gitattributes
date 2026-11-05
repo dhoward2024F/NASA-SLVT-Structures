@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.ork binary
+*.SLDPRT binary
+*.SLDASM binary
+*.SLDDRW binary
+*.pdf binary
+*.zip binary

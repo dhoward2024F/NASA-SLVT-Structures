@@ -14,22 +14,13 @@ MATLAB R2021a or newer is required for the GUI; no additional toolboxes are requ
 
 The app opens with your saved personal settings, or the original L2200G defaults if none exist. Edit variables and run simulations as before. Local settings continue saving in your MATLAB preferences folder. The `matlab/app/` directory is also independently usable: open that directory and run `app = SLVTFlightApp;`.
 
-## Add to your GitHub repository
+## Repository inputs
 
-Copy `startSLVT.m`, `matlab/`, and `.github/workflows/matlab-analysis.yml` into the repository root. Keep your existing four JSON files in `config/` and add `config/matlab_model.json`. Matching copies of the four previously delivered JSONs are included for a new repository. Merge the included `.gitignore` entries into your existing file.
+This app is already integrated into this repository. `config/matlab_model.json` holds section masses, body Cd, propellant fallback, recovery timing, integration settings, and inputs the shared JSONs do not contain. Shared values in `vehicle.json` and `launch_conditions.json` take precedence; null values use explicit, reported fallbacks.
 
-The new `matlab_model.json` holds the section masses, body Cd, propellant fallback, recovery timing, integration settings, and other inputs the four shared JSONs do not contain. It is essential to reproduce the MATLAB model. JSON values in `vehicle.json` and `launch_conditions.json` take precedence for shared inputs; null values use explicit, reported fallbacks from `matlab_model.json`.
+The current configured motor is L2200G at `vehicle/openrocket/motors/AeroTech_L2200G.csv`. If you select another motor, commit the actual CSV or single-motor RASP `.eng` file and update the path. `.eng` thrust is interpreted as newtons. The runner fails if the selected file is missing.
 
-### Resolve the motor and model choice once
-
-The previously supplied `vehicle.json` specifies `vehicle/openrocket/motors/L1940X.eng`; that file was not supplied. The saved app includes `AeroTech_L2200G.csv`. The runner deliberately errors if the specified motor is absent.
-
-Choose the model you intend to use:
-
-- To publish the current app model, launch the app, review/edit its variables, then choose **Repository > Save model to repository...**. Select the repository root. This copies the selected motor and updates `vehicle.json`, the elevation/rail-length fields of `launch_conditions.json`, and `matlab_model.json`. It preserves the case definitions and requirements. Commit these changes with the app code.
-- To use the L1940X configuration already in your JSONs, add its actual single-motor `.eng` file at the configured path and fill in/review the masses and MATLAB-specific settings. The importer supports two-column CSV and single-motor RASP `.eng` files. `.eng` thrust values are always interpreted as newtons.
-
-The JSON example and original app also differ in fin height and main/payload parachute values. Loading repository inputs intentionally uses the JSON values; saving the app model intentionally replaces those shared values with the selected app settings. No silent motor or model substitution occurs.
+GUI preferences and repository JSON values can differ. Loading repository inputs uses the JSON values; saving from the app intentionally updates shared values from the applied app settings. Review the model before saving. Case definitions and requirements are preserved.
 
 ## Use the Repository menu
 
@@ -85,11 +76,11 @@ addpath('matlab/app');
 save('results/matlab/full_results.mat', 'results', '-v7.3');
 ```
 
-## GitHub Actions
+## GitHub Actions and dashboard
 
-The included workflow runs integration tests and analyzes the versioned model on relevant pushes, pull requests, and manual dispatches. It uploads reports even when a requirement fails. It uses MATLAB R2024b and the MathWorks setup/run-command actions.
+The combined `mission-analysis.yml` workflow runs this numerical source headlessly in GNU Octave, plus the selected OpenRocket ascent model, and stores results as a private artifact. Optional native MATLAB table/export tests run when `MLM_LICENSE_TOKEN` is configured. No MATLAB license secret is needed for the ordinary Octave analysis. See [automation instructions](../docs/AUTOMATION.md).
 
-For a private repository, configure the `MLM_LICENSE_TOKEN` repository secret with a MathWorks batch licensing token, or adapt the workflow to an appropriately licensed self-hosted runner. Public repositories are automatically licensed for this base-MATLAB workflow by the MathWorks actions. See [Setup MATLAB](https://github.com/matlab-actions/setup-matlab) and [Run MATLAB Command](https://github.com/matlab-actions/run-command).
+For dashboard use, prefer `python scripts/run_analysis.py` from the repository root over calling `run_ci` directly. The Python wrapper attaches the file fingerprints used to detect outdated results. The MATLAB app and direct `run_ci` interface remain independent of Python for their own runs/reports.
 
 ## Model interpretation
 
@@ -114,4 +105,4 @@ testSLVTFlightApp(false);  % original MATLAB tables/exports checks
 testSLVTFlightApp(true);   % original GUI/settings smoke check on a desktop
 ```
 
-See `docs/VALIDATION.md` for tests actually executed for this delivery. The older documents in `matlab/app/` describe the original app; this README defines the repository additions.
+See [the validation record](../docs/VALIDATION.md) for tests actually executed for this delivery. The older documents in `matlab/app/` describe the original app; this README defines the repository additions.
