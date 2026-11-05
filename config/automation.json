@@ -11,6 +11,6 @@
     "turbulence_intensity": 0.0
   },
   "pages": {
-    "enabled": false
+    "enabled": true
   }
 }
