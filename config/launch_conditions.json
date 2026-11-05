@@ -1,0 +1,16 @@
+{
+  "launch_site": {
+    "latitude_deg": null,
+    "longitude_deg": null,
+    "elevation_ft": null
+  },
+  "environment": {
+    "temperature_F": 59,
+    "pressure_Pa": 101325,
+    "wind_speed_mph": 5
+  },
+  "launch": {
+    "rail_length_ft": null,
+    "launch_angle_from_vertical_deg": 5
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "model": {
+    "version": 1,
+    "forwardMassLbm": 4.61875,
+    "centralMassLbm": 14.6875,
+    "aftMassLbm": 22.6875,
+    "drogueHardwareLbm": 1.675,
+    "mainHardwareLbm": 3.28125,
+    "payloadHardwareLbm": 0.68125,
+    "useSectionTotal": false,
+    "excludeHardwareMass": true,
+    "bodyCd": 0.515,
+    "drogueDelayS": [
+      0.0,
+      1.0,
+      2.0
+    ],
+    "mainDeployAltFt": [
+      625.0,
+      525.0,
+      500.0
+    ],
+    "payloadDeployAltFt": 300,
+    "drogueOpenS": 0.1,
+    "mainOpenS": 1.25,
+    "payloadOpenS": 1,
+    "g": 32.174,
+    "soundSpeedFtS": 1125.33,
+    "timeStepS": 0.001,
+    "maxTimeS": 600,
+    "atmosphere": "standard",
+    "motorThrustUnit": "N"
+  },
+  "fallbacks": {
+    "bodyDiameterIn": 6.17,
+    "finCount": 4,
+    "finHeightIn": 6,
+    "finThicknessIn": 0.25,
+    "totalMassLbm": 55.0625,
+    "payloadMassLbm": 11.725,
+    "propellantMassLbm": 5.5511463844797175,
+    "drogueDiameterFt": 2,
+    "mainDiameterFt": 14,
+    "payloadDiameterFt": 6,
+    "drogueCd": 0.97,
+    "mainCd": 2.2,
+    "payloadCd": 1.122,
+    "siteAltitudeFt": 800,
+    "railLengthFt": 9.583333333333334
+  }
+}

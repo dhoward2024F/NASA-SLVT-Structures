@@ -1,0 +1,76 @@
+{
+  "source": "NASA Student Launch 2026-2027 Handbook requirements, as supplied by the team",
+  "evaluation": {
+    "limits_inclusive": true,
+    "missing_metric_status": "not_evaluated",
+    "evaluate_each_case": true,
+    "independent_section_rule": "Every independently landing section must pass each requirement scoped to independent sections."
+  },
+  "requirements": [
+    {
+      "id": "2.1",
+      "name": "Apogee altitude AGL",
+      "metric": "apogee_ft",
+      "type": "range",
+      "minimum": 4000,
+      "maximum": 6000,
+      "units": "ft",
+      "scope": "launch_vehicle"
+    },
+    {
+      "id": "2.12",
+      "name": "Minimum thrust-to-weight ratio",
+      "metric": "thrust_to_weight_ratio",
+      "type": "minimum",
+      "value": 5.0,
+      "units": "dimensionless",
+      "scope": "launch_vehicle"
+    },
+    {
+      "id": "2.14",
+      "name": "Minimum rail exit velocity",
+      "metric": "rail_exit_velocity_fps",
+      "type": "minimum",
+      "value": 52,
+      "units": "ft/s",
+      "scope": "launch_vehicle"
+    },
+    {
+      "id": "2.20.6",
+      "name": "Maximum Mach number throughout flight",
+      "metric": "max_mach",
+      "type": "maximum",
+      "value": 1.0,
+      "units": "Mach",
+      "scope": "entire_flight"
+    },
+    {
+      "id": "3.2",
+      "name": "Maximum landing kinetic energy per independent section",
+      "metric": "landing_kinetic_energy_ft_lbf",
+      "type": "maximum",
+      "value": 75,
+      "units": "ft-lbf",
+      "scope": "each_independent_section"
+    },
+    {
+      "id": "3.10",
+      "name": "Maximum landing drift radius from launch pad",
+      "metric": "landing_drift_ft",
+      "type": "maximum",
+      "value": 2500,
+      "units": "ft",
+      "scope": "each_independent_section"
+    },
+    {
+      "id": "3.11",
+      "name": "Maximum descent time from apogee to touchdown",
+      "metric": "descent_time_s",
+      "type": "maximum",
+      "value": 100,
+      "units": "s",
+      "scope": "each_independent_section",
+      "time_reference": "launch_vehicle_apogee_to_section_touchdown"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+<!doctype html><html><head><meta charset="utf-8"><title>SLVT Flight App — User Guide</title><style>body{font:16px/1.65 system-ui,sans-serif;color:#1b2733;background:#eef2f5;margin:0}main{max-width:940px;margin:auto;padding:42px 54px;background:white}h1{font-size:32px;color:#17476d}h2{font-size:23px;margin-top:38px;color:#17476d}pre{background:#142c42;color:#e3edf6;padding:18px;border-radius:6px;overflow:auto}code{font-size:14px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #d4dee6;padding:10px;text-align:left}th{background:#eaf0f5}a{color:#165fa0}li{margin:7px 0}strong{color:#153f60}@media(max-width:700px){main{padding:20px}}@media print{main{padding:0}body{background:white}}</style></head><body><main><h1>SLVT Flight and Recovery App</h1>
+<p>A programmatic MATLAB app based on David Howard's supplied 10/10/2026 deploy and retain flight scripts, derived from Benjamin Putka's dead-reckoning model. The interface is an editable MATLAB class (<code>SLVTFlightApp.m</code>). Requires MATLAB R2021a or later; no additional toolboxes.</p>
+<h2>Repository update — November 2026</h2>
+<p>The app now includes a <strong>Repository</strong> menu. Load a model from a repository, explicitly save the current applied model and motor to it, or run the exact JSON-defined cases. Repository runs write CSV and JSON checks to <code>results/matlab/</code>. The ordinary Run simulations button continues using the visible controls.</p>
+<p>From the package root, start with <code>app = startSLVT;</code>. For headless execution, use <code>addpath('matlab'); run_ci(pwd, false);</code>. See the root <code>README.md</code> for setup, GitHub Actions, model precedence, and limitations. The supplied repository JSON names an L1940X curve that must be added; standalone defaults use the included L2200G curve.</p>
+<h2>Start directly from the app directory</h2>
+<ol>
+<li>Extract the ZIP and open the <code>matlab/app</code> folder in MATLAB.</li>
+<li>Keep the <code>.m</code> files and the included <code>AeroTech_L2200G.csv</code> in that folder.</li>
+<li>Enter:</li>
+</ol>
+<pre><code class="language-matlab">app = SLVTFlightApp;
+</code></pre>
+<p>You can also enter <code>SLVTFlightApp</code> without assigning the output. The open window's callbacks keep the app alive.</p>
+<h2>Workflow</h2>
+<ul>
+<li><strong>Edit model variables...</strong> opens a separate window with Masses, Drag and geometry, Recovery timing, Environment and numerics, and Motor CSV tabs. Edit only the Value cells. Browse for a motor curve and preview it before applying.</li>
+<li><strong>Apply and save</strong> validates the settings and motor file, saves them, and closes the editor. Cancel discards the edits. Load original defaults changes the editor's draft until you apply it.</li>
+<li>Set the payload case (Deploy, Retain/abort, or both) and recovery (1, 2, 3, or all). Choose 5°/10° or one custom angle; choose 0/5/10/15/20 mph or one custom wind.</li>
+<li><strong>Use full sweep</strong> selects 60 cases: 2 payload cases × 3 recoveries × 2 angles × 5 winds. There are 12 vertical calculations because wind affects only post-apogee drift.</li>
+<li><strong>Run simulations</strong> computes the selected cases. Settings and run controls save after each successful batch. Cancel leaves the previous results available.</li>
+<li>Select a case in the dropdown or click a Case summary row. Flight tables show performance, individual section mass/impact energy, drogue tethered-group energy, drift, and event timing.</li>
+<li>Select multiple summary rows (Ctrl/Cmd-click or drag across cells), then choose <strong>Compare selected summary rows</strong>. Plots support altitude, velocity, acceleration, a three-axis flight profile, drift history, drift versus wind, and the motor curve. Duplicate wind cases share their vertical curve in overlays.</li>
+<li><strong>Open plot figure</strong> gives you a normal MATLAB figure. <strong>Save plot...</strong> writes PNG, vector PDF, or <code>.fig</code>.</li>
+<li><strong>Export CSV + MAT...</strong> creates a new timestamped folder containing the summary, per-flight tables, JSON model snapshot, and full results/trajectories in <code>SLVT_results.mat</code>. Check Include full histories in CSV if needed; it can produce large exports.</li>
+<li><strong>Send results to workspace</strong> creates/replaces <code>SLVTResults</code>, <code>SLVTConfig</code>, and <code>SLVTSelected</code>. The last contains the selected case, flight, tables, and vehicle/payload history tables.</li>
+</ul>
+<h2>Defaults and units</h2>
+<p>The included values reproduce the supplied scripts' input values. Masses are edited in <strong>lbm</strong>, then converted to slugs using <code>mass_lbm / g</code>. Altitudes/distances are ft, time is s, forces are lbf, energy is ft-lbf, and wind inputs are mph. Launch angle is <strong>degrees from vertical</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Recovery</th>
+<th style="text-align: right;">Drogue command after apogee</th>
+<th style="text-align: right;">Main command altitude</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — Primary</td>
+<td style="text-align: right;">0 s</td>
+<td style="text-align: right;">625 ft AGL</td>
+</tr>
+<tr>
+<td>2 — Secondary</td>
+<td style="text-align: right;">1 s</td>
+<td style="text-align: right;">525 ft AGL</td>
+</tr>
+<tr>
+<td>3 — Tertiary</td>
+<td style="text-align: right;">2 s</td>
+<td style="text-align: right;">500 ft AGL</td>
+</tr>
+</tbody>
+</table>
+<p>Opening times are drogue 0.1 s, main 1.25 s, and payload 1 s. Payload release is at 300 ft AGL. Launch site elevation is 800 ft ASL.</p>
+<p>The original total liftoff mass is 881 oz = 55.0625 lbm. Payload + forward + central + aft masses sum to 859.5 oz = 53.71875 lbm, leaving <strong>1.34375 lbm unassigned</strong>. The app keeps the independently specified total for dynamics and shows the difference. Unassigned mass is not added to a section KE because its location is unknown. Use sum of section masses for liftoff mass if the section values are your complete measured model.</p>
+<p>The forward mass in the editor excludes the detachable payload/nosecone. The Retain case automatically combines these two masses, matching the original abort script's 261.5 oz forward mass.</p>
+<p>Propellant is included in the aft section at liftoff. Drogue hardware is included in aft, main hardware in central, and payload hardware in payload. Do not add these masses to the section sum a second time.</p>
+<h2>What stays the same, and what was corrected</h2>
+<p>The app preserves the original equations and modeling assumptions:</p>
+<ul>
+<li><code>a = F/m</code>, <code>v = v0 + a*dt</code>, <code>h = h0 + (v+v0)*dt/2</code>.</li>
+<li>Fixed launch-angle projection of thrust and ascent drag; drag is calculated from vertical speed. Constant body Cd, gravity, sound speed, and propellant burn rate.</li>
+<li>Rail exit uses the original effective rail length as a vertical altitude threshold.</li>
+<li>Negligible body drag in descent, instantaneous full parachute drag after the opening event, and separate payload descent after release.</li>
+<li>The main opens at <code>mainCommandAlt - mainOpenTime * drogueTerminalEstimate</code>. It is an altitude-offset approximation, not a timed/inflating parachute model. The terminal estimate uses density at AGL altitude exactly as in the scripts; other drag forces use ASL altitude.</li>
+<li>Drift starts at zero at apogee and is <code>wind_ft_per_s * (time - apogee_time)</code>. The model does not predict ascent downrange displacement, wind-induced changes to the vertical trajectory, stability margin, attitude dynamics, or opening loads.</li>
+<li><strong>Exclude open recovery hardware from suspended mass</strong> defaults on. This preserves the scripts' subtraction of parachute/recovery hardware from suspended section mass as each chute opens. Clear it to include attached hardware in the dynamics and section energy; this intentionally changes results.</li>
+<li>Reported maximum Mach uses vertical speed and the fixed configured sound speed. MaxNetG is net vertical acceleration divided by g, not a full structural load factor.</li>
+</ul>
+<p>Corrections made in conversion:</p>
+<ol>
+<li>The supplied motor CSV's metadata/header rows are safely skipped; columns become numeric vectors. The helper in the old scripts interpolated a full curve every step, offset it by the first timestamp, and could run beyond its last index. The app interpolates once at actual burn sample times, adding <code>(0, 0)</code> when the curve starts after zero.</li>
+<li>Payload drift uses its independent touchdown time relative to the shared apogee. The old deploy script used <code>i</code> instead of <code>j</code> and included ascent time in the payload drift clock.</li>
+<li>Apogee, rail exit, deployment crossings, and touchdown are located inside an integration step. The same constant-acceleration equation is used for these event crossings.</li>
+<li>Traces grow as needed instead of stopping at a fixed 100000-sample allocation. There are input checks, cancellation, and a maximum-time guard.</li>
+<li>Individual drogue section KE and combined tethered-group KE are separate tables. The old table repeated the entire forward tethered group's energy on each section row.</li>
+<li>An internal 1976 standard lower-atmosphere density function removes the missing <code>atmos.m</code> dependency. It uses geopotential altitude, a troposphere lapse rate, and the 11–20 km isothermal layer. You can select External atmos.m and put your original helper on the MATLAB path if you want that density implementation.</li>
+</ol>
+<p>Because the interpolation/indexing errors and event times were corrected, and the original <code>atmos.m</code> was not supplied, results are not expected to match the old scripts bit-for-bit. The model notes inside the app also explain these choices.</p>
+<h2>Saved models and reproducibility</h2>
+<p>Personal settings are in:</p>
+<pre><code class="language-matlab">fullfile(prefdir, 'SLVTFlightApp', 'settings.json')
+</code></pre>
+<p>The app automatically restores that file on its next launch. Apply saves immediately, and successful runs save again. Each results structure stores a snapshot of its configuration, run selection, and motor samples; editing the model does not alter old results. Exports include that exact snapshot.</p>
+<p>You can keep a separate settings profile for a model or vehicle:</p>
+<pre><code class="language-matlab">app = SLVTFlightApp(fullfile(pwd, 'Venture_settings.json'));
+</code></pre>
+<p>If you move a motor file, browse to its new location in the editor. The included motor is relocated automatically when its filename is found beside the app.</p>
+<h2>Run without the GUI</h2>
+<pre><code class="language-matlab">cfg = slvtDefaultConfig();
+cfg.bodyCd = 0.52;
+cfg.motorFile = fullfile(pwd, 'AeroTech_L2200G.csv');
+selection = struct('Modes', {{'Deploy','Retain'}}, ...
+    'Recoveries', 1:3, 'AnglesDeg', [5 10], 'WindsMph', 0:5:20);
+results = slvtRunCases(cfg, selection);
+disp(results.Summary)
+slvtExportResults(results, pwd, false);
+</code></pre>
+<p>A single custom case:</p>
+<pre><code class="language-matlab">selection = struct('Modes', {{'Retain'}}, ...
+    'Recoveries', 2, 'AnglesDeg', 7.5, 'WindsMph', 12.3);
+results = slvtRunCases(cfg, selection);
+</code></pre>
+<p>Engine-only access:</p>
+<pre><code class="language-matlab">motor = slvtReadMotor(cfg.motorFile, cfg.motorThrustUnit);
+flight = slvtSimulate(cfg, motor, 'Deploy', 1, 5);
+tables = slvtBuildTables(flight, cfg, [0 5 10 15 20]);
+history = slvtTraceTable(flight.Vehicle, flight.Metrics.TimeToApogeeS, 10);
+</code></pre>
+<p>Trace columns are time, altitude, vertical velocity, acceleration, suspended mass in lbm, and phase code. An empty Payload trace and NaN payload metrics mean not applicable for Retain. Descent and impact speeds shown in tables are positive magnitudes; velocity histories are signed.</p>
+<h2>Checks</h2>
+<p>Run the supplied MATLAB checks from the app folder:</p>
+<pre><code class="language-matlab">testSLVTNumerics         % engine checks, also usable in GNU Octave
+testSLVTFlightApp(false)  % numerical, case tables, custom cases, invalid inputs, exports
+testSLVTFlightApp(true)   % also creates the UI, opens/applies the model editor, restores settings
+</code></pre>
+<p>The GUI requires MATLAB and is not supported by GNU Octave. See <code>VALIDATION.md</code> for checks performed during delivery.</p>
+<h2>Files</h2>
+<p><code>SLVTFlightApp.m</code> owns the interface and settings; <code>slvtSimulate.m</code> is the stage engine; <code>slvtRunCases.m</code> builds the case matrix without repeating wind-independent dynamics. Other helpers handle defaults, validation, density, motor import, tables, plotting, and export. The old scripts and <code>plotORdata.m</code> are no longer dependencies.</p>
+<p>MathWorks references: <a href="https://www.mathworks.com/help/matlab/creating_guis/create-and-run-a-simple-programmatic-app.html">programmatic apps</a>, <a href="https://www.mathworks.com/help/matlab/ref/uigridlayout.html">grid layouts</a>, <a href="https://www.mathworks.com/help/matlab/ref/uitable.html">UI tables</a>, and <a href="https://www.mathworks.com/help/matlab/ref/exportgraphics.html">plot export</a>.</p>
+<p>Atmosphere reference: <a href="https://ntrs.nasa.gov/api/citations/19770009539/downloads/19770009539.pdf">U.S. Standard Atmosphere, 1976, NASA-TM-X-74335</a>.</p></main></body></html>

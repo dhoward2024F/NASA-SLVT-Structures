@@ -1,0 +1,42 @@
+function cfg = slvtDefaultConfig()
+%SLVTDEFAULTCONFIG Editable defaults from David Howard's 10/10/2026 scripts.
+% Mass entries are lbm; the simulation converts them to slugs with cfg.g.
+    cfg.version = 1;
+    cfg.totalMassLbm = 881 / 16;
+    cfg.payloadMassLbm = 187.6 / 16;
+    cfg.forwardMassLbm = 73.9 / 16; % excludes detachable payload/nosecone
+    cfg.centralMassLbm = 235 / 16;
+    cfg.aftMassLbm = 363 / 16;     % includes propellant and drogue hardware
+    cfg.propellantMassLbm = 2518 / 453.6;
+    cfg.drogueHardwareLbm = 26.8 / 16;
+    cfg.mainHardwareLbm = 52.5 / 16;
+    cfg.payloadHardwareLbm = 10.9 / 16;
+    cfg.useSectionTotal = false;   % preserve independently measured total
+    cfg.excludeHardwareMass = true; % legacy suspended-section mass convention
+    cfg.bodyCd = 0.515;
+    cfg.drogueCd = 0.97;
+    cfg.mainCd = 2.2;
+    cfg.payloadCd = 1.122;
+    cfg.bodyDiameterIn = 6.17;
+    cfg.finHeightIn = 6;
+    cfg.finThicknessIn = 0.25;
+    cfg.finCount = 4;
+    cfg.railLengthFt = (144 - 29) / 12;
+    cfg.drogueDiameterFt = 2;
+    cfg.mainDiameterFt = 14;
+    cfg.payloadDiameterFt = 6;
+    cfg.drogueDelayS = [0 1 2];
+    cfg.mainDeployAltFt = [625 525 500];
+    cfg.payloadDeployAltFt = 300;
+    cfg.drogueOpenS = 0.1;
+    cfg.mainOpenS = 1.25;
+    cfg.payloadOpenS = 1;
+    cfg.siteAltitudeFt = 800;
+    cfg.g = 32.174;
+    cfg.soundSpeedFtS = 1125.33;
+    cfg.timeStepS = 0.001;
+    cfg.maxTimeS = 600;
+    cfg.atmosphere = 'standard'; % 'external' uses the original atmos.m
+    cfg.motorFile = fullfile(fileparts(mfilename('fullpath')), 'AeroTech_L2200G.csv');
+    cfg.motorThrustUnit = 'N';
+end

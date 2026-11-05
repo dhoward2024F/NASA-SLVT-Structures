@@ -1,0 +1,33 @@
+{
+  "vehicle_name": "SLVT_2027",
+  "units": "imperial",
+  "geometry": {
+    "body_diameter_in": 6.17,
+    "fin_count": 4,
+    "fin_height_in": 7.0,
+    "fin_thickness_in": 0.25
+  },
+  "mass": {
+    "liftoff_lbm": null,
+    "burnout_lbm": null,
+    "payload_lbm": null
+  },
+  "propulsion": {
+    "motor_name": "L2200G",
+    "motor_file": "vehicle/openrocket/motors/AeroTech_L2200G"
+  },
+  "recovery": {
+    "drogue": {
+      "diameter_in": 24,
+      "cd": 0.97
+    },
+    "main": {
+      "diameter_in": 168,
+      "cd": 0.97
+    },
+    "payload": {
+      "diameter_in": 36,
+      "cd": 2.2
+    }
+  }
+}

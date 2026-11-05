@@ -1,0 +1,447 @@
+{
+  "description": "60 standard cases. Case wind speed and launch angle override launch_conditions.json. The optional custom condition adds six cases.",
+  "recovery_configuration_ids": {
+    "primary": 1,
+    "secondary": 2,
+    "tertiary": 3
+  },
+  "cases": [
+    {
+      "name": "angle_5deg_wind_0mph_deploy_primary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_0mph_deploy_secondary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_0mph_deploy_tertiary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_0mph_retain_primary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_0mph_retain_secondary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_0mph_retain_tertiary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_5mph_deploy_primary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_5mph_deploy_secondary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_5mph_deploy_tertiary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_5mph_retain_primary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_5mph_retain_secondary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_5mph_retain_tertiary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_10mph_deploy_primary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_10mph_deploy_secondary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_10mph_deploy_tertiary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_10mph_retain_primary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_10mph_retain_secondary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_10mph_retain_tertiary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_15mph_deploy_primary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_15mph_deploy_secondary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_15mph_deploy_tertiary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_15mph_retain_primary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_15mph_retain_secondary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_15mph_retain_tertiary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_20mph_deploy_primary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_20mph_deploy_secondary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_20mph_deploy_tertiary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_5deg_wind_20mph_retain_primary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_20mph_retain_secondary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_5deg_wind_20mph_retain_tertiary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 5,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_0mph_deploy_primary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_0mph_deploy_secondary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_0mph_deploy_tertiary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_0mph_retain_primary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_0mph_retain_secondary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_0mph_retain_tertiary",
+      "wind_speed_mph": 0,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_5mph_deploy_primary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_5mph_deploy_secondary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_5mph_deploy_tertiary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_5mph_retain_primary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_5mph_retain_secondary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_5mph_retain_tertiary",
+      "wind_speed_mph": 5,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_10mph_deploy_primary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_10mph_deploy_secondary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_10mph_deploy_tertiary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_10mph_retain_primary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_10mph_retain_secondary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_10mph_retain_tertiary",
+      "wind_speed_mph": 10,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_15mph_deploy_primary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_15mph_deploy_secondary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_15mph_deploy_tertiary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_15mph_retain_primary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_15mph_retain_secondary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_15mph_retain_tertiary",
+      "wind_speed_mph": 15,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_20mph_deploy_primary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_20mph_deploy_secondary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_20mph_deploy_tertiary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "deploy"
+    },
+    {
+      "name": "angle_10deg_wind_20mph_retain_primary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "primary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_20mph_retain_secondary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "secondary",
+      "payload_deployment": "retain"
+    },
+    {
+      "name": "angle_10deg_wind_20mph_retain_tertiary",
+      "wind_speed_mph": 20,
+      "launch_angle_from_vertical_deg": 10,
+      "recovery_configuration": "tertiary",
+      "payload_deployment": "retain"
+    }
+  ],
+  "custom_condition": {
+    "enabled": false,
+    "name": "custom",
+    "wind_speed_mph": null,
+    "launch_angle_from_vertical_deg": null,
+    "payload_deployment": [
+      "deploy",
+      "retain"
+    ],
+    "recovery_configuration": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "expansion": "cartesian_product",
+    "description": "Set both numeric inputs and enabled=true. Expand this single angle/wind pair across both payload cases and all three recovery configurations, in addition to cases above."
+  }
+}
