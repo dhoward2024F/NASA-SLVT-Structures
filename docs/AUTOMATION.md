@@ -57,8 +57,8 @@ The standalone app remains available with `addpath('matlab'); app = startSLVT;` 
 4. Run the current models and attach input fingerprints, runtime, time, commit, and workflow run ID.
 5. Upload the `mission-analysis` artifact, including logs, even when simulation/mission checks fail.
 6. Package `_site/` from the three dashboard assets and an allowlisted results snapshot; keep it as the private `dashboard-site` artifact.
-7. Require complete current reports and passing supported mission checks.
-8. If `pages.enabled` is true, publish the dashboard from `main` in the separate `deploy` job, even if the mission-limit check failed. Pull requests never deploy.
+7. In the separate **Vehicle requirement checks** job, require complete current reports and passing supported mission checks.
+8. If `pages.enabled` is true, publish the dashboard from `main` in the separate `deploy` job, even if the mission-limit check failed. Test or simulation failures prevent deployment. Pull requests never deploy.
 
 No repository-content write permission is granted to the workflow. It does not commit generated results. The separate Pages job has `pages: write` and `id-token: write`; it runs only after explicit Pages opt-in. Private repository Actions minutes and artifact limits still apply under the repository's GitHub plan. A test/setup failure can produce incomplete dashboard data; inspect the failed step rather than assuming there is a valid simulation report.
 

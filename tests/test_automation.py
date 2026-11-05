@@ -21,6 +21,10 @@ class AutomationTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory(); self.root=Path(self.temp.name)
         for folder in ['config','vehicle','matlab','scripts','openrocket','dashboard']:
             shutil.copytree(ROOT/folder,self.root/folder,ignore=shutil.ignore_patterns('__pycache__'))
+        # Test opt-in behavior independently of the real deployment setting.
+        config=self.root/'config/automation.json'
+        settings=read_json(config);settings['pages']={'enabled':False}
+        write_json(config,settings)
     def tearDown(self):self.temp.cleanup()
 
     def test_case_matrix_and_custom_pair(self):

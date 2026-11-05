@@ -6,9 +6,9 @@ Shared flight models, configuration, and mission-performance checks for Virginia
 
 The dashboard is prepared for GitHub Pages. Once enabled, open the repository's **Deployments → github-pages → View deployment** link. No application installation or file download is needed. GitHub Actions runs the models and updates the static dashboard after relevant changes to `main`; the browser displays the published results.
 
-**Publishing is currently disabled pending approval of public access.** This is a private repository owned by a personal GitHub account. Standard GitHub Pages publishes a public website even from a private repository; repository-only Pages access requires an eligible GitHub Enterprise Cloud organization. The repository itself remains private. A personal private repository also needs GitHub Pro to use Pages.
+**Pages publishing is enabled in the repository configuration.** This is a private repository owned by a personal GitHub account. Standard GitHub Pages publishes a public website even from a private repository; repository-only Pages access requires an eligible GitHub Enterprise Cloud organization. The repository itself remains private. A personal private repository also needs GitHub Pro to use Pages.
 
-To enable after approving public dashboard access:
+Pages setup:
 
 1. Open **Settings → Pages** and set **Source** to **GitHub Actions**.
 2. Set `pages.enabled` to `true` in `config/automation.json` and commit it to `main`.
@@ -57,7 +57,7 @@ The **Mission analysis** workflow runs on relevant pushes to `main`, pull reques
 
 CI uses GNU Octave for the MATLAB numerical source so the private repository does not require a MATLAB license secret for ordinary analysis. Native MATLAB table/export validation also runs if the repository has an `MLM_LICENSE_TOKEN` secret. The desktop GUI itself requires MATLAB.
 
-**A red mission-limit check can mean a valid simulation predicts a requirement violation.** Reports are uploaded before that check. Missing, errored, incomplete, or outdated results never count as a pass.
+**The separate Vehicle requirement checks job stays red when a valid simulation predicts a requirement violation.** The analysis and deployment jobs have their own statuses. Reports are uploaded before that check. Missing, errored, incomplete, or outdated results never count as a pass.
 
 ## Cases and model coverage
 

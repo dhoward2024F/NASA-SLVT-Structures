@@ -6,7 +6,7 @@ The dashboard can be a static website hosted by GitHub. GitHub Actions performs 
 
 For this personal-account private repository, GitHub Pages serves a **public website**. A private repository does not make its Pages site private. Restricting Pages to repository readers requires a private/internal project repository in an eligible GitHub Enterprise Cloud organization. A personal-account private repository requires GitHub Pro for Pages availability.
 
-`config/automation.json` currently has `pages.enabled: false` to preserve the earlier repository-only access requirement until public publication is approved. This does not change repository visibility or permissions. No Pages deployment occurs while that flag is false.
+`config/automation.json` has Pages enabled by the repository owner. This does not change repository visibility or permissions. Setting `pages.enabled` to false stops future custom-workflow deployments.
 
 The prepared site exposes model performance, section landing masses/speeds/energy/drift/time, requirement statuses, model assumptions, runtime, commit SHA, and timestamp. It excludes model source files, CAD, motor curves, raw JSON configuration files, trajectories, full source-file manifests, and private execution logs. The published result data itself is downloadable by site visitors. The interface is read-only and has no embedded GitHub token, browser sign-in workaround, or simulation execution endpoint.
 
@@ -27,7 +27,7 @@ When the workflow creates a `github-pages` environment, retain a deployment bran
 
 Relevant pushes to `main` rerun analysis and publish a new snapshot when enabled. Manual **Actions → Mission analysis → Run workflow** also works. The browser refreshes the published JSON periodically, but that does not start simulations.
 
-The `analyze` job's mission gate may be red because the vehicle prediction violates a configured limit. The independent `deploy` job still publishes those results. If an engine fails, the published dashboard marks the result incomplete or failed rather than treating missing metrics as passes. The existing 30 payload/nosecone energy failures are preserved.
+The separate **Vehicle requirement checks** job may be red because the vehicle prediction violates a configured limit. The independent `deploy` job still publishes those results. If an engine fails, the published dashboard marks the result incomplete or failed rather than treating missing metrics as passes. The existing 30 payload/nosecone energy failures are preserved.
 
 The dashboard's commit and timestamp identify the snapshot. A newer commit may still be running or may have failed before producing a package. The website cannot check someone else's uncommitted model changes. Use its **View analysis run** link when checking freshness.
 
@@ -46,3 +46,10 @@ The directory is ignored by Git. The optional localhost dashboard continues to w
 ## Stop future publication
 
 Set `pages.enabled` to `false` to stop future deployments. This does **not** remove an already published site; use **Settings → Pages → Unpublish site** to take the existing site offline. Publicly downloaded copies cannot be revoked by unpublishing.
+
+
+## Avoid competing Pages workflows
+
+Set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. A branch-based source starts GitHub's separate Jekyll build and can collide with this repository's custom dashboard deployment. The custom deployment packages only `_site/`; a branch-based build uses a different source.
+
+Deployment waits for successful simulations. A test or engine failure prevents publication; failed vehicle limits remain visible in a separate requirement-check job and do not block publication. Deployment jobs use the `github-pages` concurrency group.

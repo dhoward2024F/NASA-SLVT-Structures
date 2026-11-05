@@ -18,6 +18,7 @@ jobs:
     outputs:
       pages_enabled: ${{ steps.site.outputs.enabled }}
       site_uploaded: ${{ steps.site_upload.outcome == 'success' }}
+      simulation_succeeded: ${{ steps.simulate.outcome == 'success' }}
     env:
       HAS_MATLAB_TOKEN: ${{ secrets.MLM_LICENSE_TOKEN != '' }}
     steps:
@@ -61,7 +62,6 @@ jobs:
           command: addpath('matlab/app'); testSLVTFlightApp(false)
       - name: Run current models
         id: simulate
-        continue-on-error: true
         run: python scripts/run_analysis.py --runtime octave
       - name: Build dashboard data
         if: always()
@@ -88,8 +88,21 @@ jobs:
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 30
-      - name: Check mission limits and result completeness
-        if: always()
+  mission-limits:
+    name: Vehicle requirement checks
+    needs: analyze
+    if: always() && needs.analyze.outputs.simulation_succeeded == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: mission-analysis
+          path: results
+      - name: Check vehicle requirements (simulation predictions)
         run: python scripts/check_requirements.py
   deploy:
     # Publish failed mission checks as well as passes, but never publish PRs.
@@ -97,11 +110,15 @@ jobs:
     if: >-
       ${{ always() && !cancelled() && github.ref == 'refs/heads/main' &&
           github.event_name != 'pull_request' &&
+          needs.analyze.outputs.simulation_succeeded == 'true' &&
           needs.analyze.outputs.pages_enabled == 'true' &&
           needs.analyze.outputs.site_uploaded == 'true' }}
     needs: analyze
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
     permissions:
       contents: read
       pages: write
