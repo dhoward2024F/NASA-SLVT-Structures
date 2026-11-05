@@ -1,10 +1,26 @@
 # NASA SLVT · Structures & Propulsion
 
-Shared flight models, configuration, and mission-performance checks for Virginia Tech Student Launch. The MATLAB app runs independently; repository automation runs the committed models and supplies a local dashboard.
+Shared flight models, configuration, and mission-performance checks for Virginia Tech Student Launch. The MATLAB app runs independently; repository automation runs the committed models and packages a GitHub Pages dashboard.
 
-## Open the dashboard
+## Open the dashboard on GitHub Pages
 
-Install Python 3.10+ and [GitHub CLI](https://cli.github.com/), then sign in once with `gh auth login` using an account with access to this private repository. In your local repository folder:
+The dashboard is prepared for GitHub Pages. Once enabled, open the repository's **Deployments → github-pages → View deployment** link. No application installation or file download is needed. GitHub Actions runs the models and updates the static dashboard after relevant changes to `main`; the browser displays the published results.
+
+**Publishing is currently disabled pending approval of public access.** This is a private repository owned by a personal GitHub account. Standard GitHub Pages publishes a public website even from a private repository; repository-only Pages access requires an eligible GitHub Enterprise Cloud organization. The repository itself remains private. A personal private repository also needs GitHub Pro to use Pages.
+
+To enable after approving public dashboard access:
+
+1. Open **Settings → Pages** and set **Source** to **GitHub Actions**.
+2. Set `pages.enabled` to `true` in `config/automation.json` and commit it to `main`.
+3. Wait for **Actions → Mission analysis → deploy** to finish. Its deployment URL is the dashboard link.
+
+The site includes case/section results, requirement checks, model assumptions, runtime, analyzed commit, and timestamp. Source models, motor curves, raw input files, and execution logs are excluded from the Pages artifact. Published results and assumptions will nevertheless be visible to anyone who can access the site.
+
+Failed mission limits still publish, so the dashboard does not silently retain an older passing result. Engine failures appear as incomplete/error states. The timestamp identifies the published analysis; a new push may still be running. See [Pages setup and access](docs/PAGES.md).
+
+### Optional local dashboard
+
+Local viewing remains available. Install Python 3.10+ and [GitHub CLI](https://cli.github.com/), sign in with `gh auth login`, then run from the repository root:
 
 ```sh
 git pull
@@ -12,11 +28,7 @@ python scripts/sync_results.py
 python scripts/serve_dashboard.py
 ```
 
-The last command opens the dashboard on **your computer**, at `127.0.0.1:8765`, with a per-launch access token. Keep that terminal running; press Ctrl+C to stop it. If the browser does not open, use the complete URL printed in the terminal. On systems where Python is named `python3`, use that instead.
-
-The dashboard provides model comparisons, filters for all cases, individual section landing results, CSV export, requirement traceability, model assumptions, and result freshness checks. No Node installation or web build is needed to view it.
-
-GitHub controls access to the private source and result artifacts. The dashboard has no public hosting or GitHub Pages deployment. Local hosting does not recheck GitHub membership: anyone who already possesses a copy of the files can read that copy. Do not expose the local port through a tunnel or reverse proxy.
+This optional server binds to `127.0.0.1:8765` and uses a per-launch token. It is not needed to view the Pages deployment. Keep the terminal open while using it; Ctrl+C stops it.
 
 ## Run the models locally
 
@@ -41,7 +53,7 @@ Use the app's **Repository** menu to load/save shared model settings or run the 
 
 ## Automatic analysis
 
-The **Mission analysis** workflow runs on relevant pushes to `main`, pull requests, and manual **Actions → Mission analysis → Run workflow** requests. It validates inputs, tests the adapters, runs both models, and stores reports as the private `mission-analysis` artifact for 30 days. Downloading the artifact requires repository access. `sync_results.py` gets the latest completed main-branch run, including one with failed mission checks.
+The **Mission analysis** workflow runs on relevant pushes to `main`, pull requests, and manual **Actions → Mission analysis → Run workflow** requests. It validates inputs, tests the adapters, runs both models, and stores reports as the private `mission-analysis` artifact for 30 days. It also builds a `dashboard-site` artifact. When Pages is explicitly enabled, a separate job publishes that static dashboard from `main`, including runs with failed mission checks. Downloading the artifact requires repository access. `sync_results.py` gets the latest completed main-branch run, including one with failed mission checks.
 
 CI uses GNU Octave for the MATLAB numerical source so the private repository does not require a MATLAB license secret for ordinary analysis. Native MATLAB table/export validation also runs if the repository has an `MLM_LICENSE_TOKEN` secret. The desktop GUI itself requires MATLAB.
 

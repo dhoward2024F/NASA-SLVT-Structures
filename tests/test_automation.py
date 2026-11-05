@@ -13,12 +13,13 @@ from preflight import check
 from build_dashboard_data import build
 from serve_dashboard import server
 from check_requirements import gate
+from build_pages import package
 
 
 class AutomationTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(); self.root=Path(self.temp.name)
-        for folder in ['config','vehicle','matlab','scripts','openrocket']:
+        for folder in ['config','vehicle','matlab','scripts','openrocket','dashboard']:
             shutil.copytree(ROOT/folder,self.root/folder,ignore=shutil.ignore_patterns('__pycache__'))
     def tearDown(self):self.temp.cleanup()
 
@@ -87,6 +88,31 @@ class AutomationTests(unittest.TestCase):
 
     def test_current_inputs_pass_preflight(self):
         self.assertEqual(len(check(self.root)),60)
+
+    def test_pages_package_contains_only_dashboard_and_results(self):
+        report=self.fixture_report('matlab');self.fixture_report('openrocket')
+        report['provenance']['input_files']={'private_source':'DO_NOT_PUBLISH'}
+        report['requirements'][0]['status']='fail'
+        write_json(self.root/'results/matlab/summary.json',report)
+        target=self.root/'_site';target.mkdir();(target/'old-private-file').write_text('DO_NOT_PUBLISH')
+        self.assertFalse(package(self.root))
+        self.assertEqual({p.name for p in target.iterdir()},{'index.html','app.js','styles.css','data.json','.nojekyll'})
+        self.assertIn('data-hosting="pages"',(target/'index.html').read_text())
+        raw=(target/'data.json').read_text();self.assertNotIn('DO_NOT_PUBLISH',raw)
+        data=read_json(target/'data.json')
+        self.assertEqual(data['models']['matlab']['status'],'complete')
+        self.assertEqual(data['models']['matlab']['requirements'][0]['status'],'fail')
+        self.assertNotIn('input_files',data['models']['matlab']['provenance'])
+        self.assertEqual(data['publication']['repository'],'dhoward2024F/NASA-SLVT-Structures')
+
+    def test_pages_preserves_missing_results_and_requires_explicit_opt_in(self):
+        self.assertFalse(package(self.root))
+        self.assertEqual(read_json(self.root/'_site/data.json')['models']['matlab']['status'],'missing')
+        path=self.root/'config/automation.json';cfg=read_json(path)
+        cfg['pages']['enabled']='true';write_json(path,cfg)
+        with self.assertRaises(ValueError): package(self.root)
+        cfg['pages']['enabled']=True;write_json(path,cfg)
+        self.assertTrue(package(self.root))
 
 
 class ServerTests(unittest.TestCase):

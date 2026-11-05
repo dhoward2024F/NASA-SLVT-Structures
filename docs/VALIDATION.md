@@ -34,3 +34,10 @@ Native MATLAB and its desktop GUI were not available in the delivery environment
 No independent flight-model accuracy, complete NASA handbook compliance, CAD reconciliation, or independent OpenRocket payload/recovery model was verified. The OpenRocket comparison covers ascent only. See [model interpretation](AUTOMATION.md).
 
 GitHub execution status is recorded separately by each **Mission analysis** workflow run; the local test results above do not imply that a GitHub runner has already completed.
+
+
+## GitHub Pages adaptation — November 5, 2026
+
+The dashboard now supports a static Pages data source with relative asset URLs, publication context, and repository/workflow links. The Pages packager uses an explicit file/data allowlist and preserves failed and missing result statuses. Tests confirm that source manifests and other repository files do not enter the site package, stale generated files are removed, and publishing requires a boolean opt-in.
+
+Eight Python tests and JavaScript syntax checking passed. Publishing remains disabled pending the user's decision about public access; these checks do not imply a live Pages deployment.

@@ -9,5 +9,8 @@
     "coverage": "ascent_only",
     "random_seed": 2027,
     "turbulence_intensity": 0.0
+  },
+  "pages": {
+    "enabled": false
   }
 }

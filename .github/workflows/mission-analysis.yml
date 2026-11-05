@@ -15,6 +15,9 @@ jobs:
   analyze:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    outputs:
+      pages_enabled: ${{ steps.site.outputs.enabled }}
+      site_uploaded: ${{ steps.site_upload.outcome == 'success' }}
     env:
       HAS_MATLAB_TOKEN: ${{ secrets.MLM_LICENSE_TOKEN != '' }}
     steps:
@@ -71,6 +74,50 @@ jobs:
           path: results/
           if-no-files-found: error
           retention-days: 30
+      - name: Package the static dashboard
+        id: site
+        if: always()
+        run: python scripts/build_pages.py
+      - name: Keep the prepared dashboard artifact
+        id: site_upload
+        if: always() && steps.site.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard-site
+          path: _site/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
       - name: Check mission limits and result completeness
         if: always()
         run: python scripts/check_requirements.py
+  deploy:
+    # Publish failed mission checks as well as passes, but never publish PRs.
+    # The explicit opt-in preserves the existing private audience by default.
+    if: >-
+      ${{ always() && !cancelled() && github.ref == 'refs/heads/main' &&
+          github.event_name != 'pull_request' &&
+          needs.analyze.outputs.pages_enabled == 'true' &&
+          needs.analyze.outputs.site_uploaded == 'true' }}
+    needs: analyze
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dashboard-site
+          path: _site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy dashboard
+        id: deployment
+        uses: actions/deploy-pages@v4

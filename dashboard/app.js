@@ -1,5 +1,6 @@
 'use strict';
 const $ = id => document.getElementById(id);
+const hosted = document.body.dataset.hosting === 'pages';
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const finite = x => typeof x === 'number' && Number.isFinite(x);
 const fmt = (x, places=0) => finite(x) ? x.toLocaleString(undefined,{minimumFractionDigits:places,maximumFractionDigits:places}) : '—';
@@ -61,7 +62,7 @@ function renderHeader(){
   $('vehicle').textContent=data.vehicle;
   const complete=data.status==='complete';
   $('freshness').className=`pill ${complete?'pass':'neutral'}`;
-  $('freshness').textContent=complete?'CURRENT INPUTS':'CHECK RESULT COVERAGE';
+  $('freshness').textContent=complete?(hosted?'PUBLISHED ANALYSIS':'CURRENT INPUTS'):'CHECK RESULT COVERAGE';
   $('sources').innerHTML=['matlab','openrocket'].map(s=>`<div class="source"><div><strong>${label(s)}</strong><small>${s==='matlab'?'All payload and recovery cases':'Ascent reference · shared across recovery cases'}</small></div>${modelState(data.models[s])}</div>`).join('');
   const provenance=['matlab','openrocket'].map(s=>data.models[s].provenance).filter(Boolean);
   $('commit').textContent=provenance.length? [...new Set(provenance.map(p=>(p.git_commit||'local').slice(0,10)))].join(' / '):'No run recorded';
@@ -69,9 +70,17 @@ function renderHeader(){
   const issues=[];
   for(const s of ['matlab','openrocket']){
     const m=data.models[s];
-    if(m.status==='missing')issues.push(`${label(s)}: no local results. Run python scripts/sync_results.py or python scripts/run_analysis.py.`);
-    if(m.status==='stale')issues.push(`${label(s)}: these results do not match the current local model/config files. Run analysis again or pull the matching commit.`);
+    if(m.status==='missing')issues.push(hosted?`${label(s)}: no results in this published run. Inspect the GitHub Actions run.`:`${label(s)}: no local results. Run python scripts/sync_results.py or python scripts/run_analysis.py.`);
+    if(m.status==='stale')issues.push(hosted?`${label(s)}: results did not match the analyzed inputs at publication. Rerun the analysis workflow.`:`${label(s)}: these results do not match the current local model/config files. Run analysis again or pull the matching commit.`);
     if(m.status==='error'||m.status==='skipped'||m.status==='incomplete')issues.push(`${label(s)}: ${m.error||'analysis incomplete; inspect results/'+s+'/run.log'}`);
+  }
+  if(hosted){
+    const repo=data.publication?.repository;
+    if(typeof repo==='string'&&/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)){
+      $('repositoryLink').href=`https://github.com/${repo}`;
+      const run=data.publication?.workflow_run_id;
+      $('workflowLink').href=typeof run==='string'&&/^\d+$/.test(run)?`https://github.com/${repo}/actions/runs/${run}`:`https://github.com/${repo}/actions`;
+    }
   }
   issues.push(...(data.errors||[]));
   $('banner').hidden=!issues.length;$('banner').textContent=issues.join('\n');
@@ -89,7 +98,7 @@ function renderMetrics(){
 }
 function renderChart(){
   const rr=rows().filter(c=>finite(c.apogee_ft));
-  if(!rr.length){$('chart').innerHTML='<div class="empty">No simulation results yet.<code>python scripts/run_analysis.py</code>Your committed models will appear here after a run.</div>';$('chartLegend').innerHTML='';return;}
+  if(!rr.length){$('chart').innerHTML='<div class="empty">No simulation results yet.<code>python scripts/run_analysis.py</code>Committed model results will appear here after analysis.</div>';$('chartLegend').innerHTML='';return;}
   const groups=new Map();
   for(const c of rr){const key=`${c.source}|${c.launch_angle_from_vertical_deg}`;if(!groups.has(key))groups.set(key,{source:c.source,angle:c.launch_angle_from_vertical_deg,points:new Map()});groups.get(key).points.set(c.wind_speed_mph,c.apogee_ft);}
   const width=650,height=285,left=57,right=20,top=20,bottom=38;
@@ -160,10 +169,10 @@ function render(){
 async function refresh(){
   $('refresh').disabled=true;
   try{
-    let response=await fetch('api/dashboard',{cache:'no-store'});
-    // Static QA snapshot only; production server does not serve this path.
-    if(response.status===404||(response.ok&&(response.headers.get('content-type')||'').includes('text/html')))response=await fetch('data.json',{cache:'no-store'});
-    if(!response.ok)throw new Error(`Cannot load results (${response.status}). Reopen the URL printed by serve_dashboard.py.`);
+    let response=await fetch(hosted?'data.json':'api/dashboard',{cache:'no-store'});
+    // A static preview can also use the packaged data file.
+    if(!hosted&&(response.status===404||(response.ok&&(response.headers.get('content-type')||'').includes('text/html'))))response=await fetch('data.json',{cache:'no-store'});
+    if(!response.ok)throw new Error(`Cannot load results (${response.status}). ${hosted?'Refresh after the Pages deployment completes.':'Reopen the URL printed by serve_dashboard.py.'}`);
     const next=await response.json();if(next.schema_version!==1)throw new Error('Unsupported dashboard data version');
     data=next;
     fillOptions('angleFilter',[...new Set(data.case_definitions.map(c=>c.launch_angle_from_vertical_deg))].sort((a,b)=>a-b),'°','All angles');
@@ -171,6 +180,12 @@ async function refresh(){
     render();
   }catch(error){$('banner').hidden=false;$('banner').textContent=error.message;$('freshness').textContent='LOAD ERROR';$('freshness').className='pill fail';}
   finally{$('refresh').disabled=false;}
+}
+if(hosted){
+  $('hostingLabel').textContent='GITHUB PAGES';
+  $('hostingDescription').textContent='Published mission results. Updated by GitHub Actions.';
+  $('localInstructions').hidden=true;
+  $('pagesInstructions').hidden=false;
 }
 for(const el of document.querySelectorAll('.nav'))el.addEventListener('click',()=>selectView(el.dataset.view));
 for(const id of filterIds)$(id).addEventListener('change',render);

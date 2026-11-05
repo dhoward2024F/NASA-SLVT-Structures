@@ -1,4 +1,4 @@
-# Mission analysis and local dashboard
+# Mission analysis and dashboard
 
 ## Configuration ownership
 
@@ -16,6 +16,10 @@ The selected full-scale file is `vehicle/openrocket/SLVT_2627_FS_PDR_LVC1_V2.ork
 Repository MATLAB runs ignore personal GUI preferences. Null liftoff/payload mass, elevation, and rail-length fields use the explicit `matlab_model.json` fallbacks and are reported in the assumptions. Review those inputs before treating estimates as the current vehicle. The configured L2200G CSV has been connected to its actual repository path.
 
 The `.gitattributes` file keeps text inputs at LF line endings across platforms so Windows Git checkout conversion does not falsely invalidate report fingerprints.
+
+## GitHub Pages
+
+The browser can load a published static dashboard directly from GitHub Pages. [Pages setup and access](PAGES.md) describes the explicit publishing opt-in and the public visibility of Pages on a personal account. The local server remains optional.
 
 ## Local usage
 
@@ -52,9 +56,11 @@ The standalone app remains available with `addpath('matlab'); app = startSLVT;` 
 3. Optionally run native MATLAB table/export tests with `MLM_LICENSE_TOKEN` on non-PR runs.
 4. Run the current models and attach input fingerprints, runtime, time, commit, and workflow run ID.
 5. Upload the `mission-analysis` artifact, including logs, even when simulation/mission checks fail.
-6. Require complete current reports and passing supported mission checks.
+6. Package `_site/` from the three dashboard assets and an allowlisted results snapshot; keep it as the private `dashboard-site` artifact.
+7. Require complete current reports and passing supported mission checks.
+8. If `pages.enabled` is true, publish the dashboard from `main` in the separate `deploy` job, even if the mission-limit check failed. Pull requests never deploy.
 
-No repository-write permission is granted to the workflow. It does not commit generated results or publish a site. Private repository Actions minutes and artifact limits still apply under the repository's GitHub plan. A test/setup failure can produce incomplete dashboard data; inspect the failed step rather than assuming there is a valid simulation report.
+No repository-content write permission is granted to the workflow. It does not commit generated results. The separate Pages job has `pages: write` and `id-token: write`; it runs only after explicit Pages opt-in. Private repository Actions minutes and artifact limits still apply under the repository's GitHub plan. A test/setup failure can produce incomplete dashboard data; inspect the failed step rather than assuming there is a valid simulation report.
 
 ## Outputs and provenance
 
@@ -67,7 +73,7 @@ No repository-write permission is granted to the workflow. It does not commit ge
 | `results/*/run.log` | Engine diagnostics |
 | `results/dashboard.json` | Combined portable snapshot |
 
-The local server rebuilds its data from the engine reports and current files on each refresh. A SHA-256 manifest includes config, MATLAB source, motor curves, OpenRocket models, and automation source. Local input edits therefore invalidate old reports even without a new commit. Matching a commit ID alone is insufficient. Pull the matching models or rerun to resolve an **Outdated** badge. Generated outputs and runtime caches are ignored by Git.
+The local server rebuilds its data from the engine reports and current files on each refresh. Pages uses the snapshot packaged at analysis time, identified by commit and timestamp; refreshing Pages does not rerun simulations or check uncommitted local files. A SHA-256 manifest includes config, MATLAB source, motor curves, OpenRocket models, and automation source. Local input edits therefore invalidate old reports even without a new commit. Matching a commit ID alone is insufficient. Pull the matching models or rerun to resolve an **Outdated** badge. Generated outputs and runtime caches are ignored by Git.
 
 ## Interpreting the checks
 
@@ -91,7 +97,7 @@ The MATLAB model calculates 60 logical cases and reuses identical vertical histo
 
 The server binds only to `127.0.0.1`. Each launch creates a random access token, exchanges it for an HttpOnly/SameSite cookie, and removes it from the address bar. Only the dashboard assets and read-only results API are served; model files and `.git` are not exposed. There is no run-command endpoint, external asset/CDN dependency, or cross-origin API access.
 
-This protects the local listener; it is not a GitHub membership authentication system. Repository access governs obtaining source and CI artifacts. A person who already has downloaded files retains that copy after repository access changes. Keep the repository private and use local copies; do not forward the port or put it on a shared host. Stop the terminal with Ctrl+C when finished. Use `--port 8766` if the default port is occupied, or `--no-browser` to print the URL without opening it.
+This protects the local listener; it is not a GitHub membership authentication system. Repository access governs obtaining source and CI artifacts. A person who already has downloaded files retains that copy after repository access changes. For the optional local server, keep the repository private and do not forward the port or put it on a shared host. Pages has a separate public-access implication described in [Pages setup](PAGES.md). Stop the terminal with Ctrl+C when finished. Use `--port 8766` if the default port is occupied, or `--no-browser` to print the URL without opening it.
 
 ## Verification and troubleshooting
 
